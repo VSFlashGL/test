@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Lottie from 'lottie-react';
 
 // Импортируем все анимации
@@ -122,8 +122,8 @@ const SimpleWheel = () => {
   // Навигация по разделам
   const [activeScreen, setActiveScreen] = useState('home'); // 'home' | 'free' | 'referral' | 'roulette'
   // Балансы пользователя (заглушки)
-  const [gemsBalance, setGemsBalance] = useState(0);
-  const [starsBalance, setStarsBalance] = useState(0);
+  const [gemsBalance] = useState(0);
+  const [starsBalance] = useState(0);
   
   // Компонент нижней навигации
   const BottomNav = () => (
@@ -244,11 +244,11 @@ const SimpleWheel = () => {
   }, []);
 
   // Получить призы для выбранного уровня
-  const getFilteredItems = () => {
+  const getFilteredItems = useCallback(() => {
     const config = TIER_CONFIG[selectedTier];
     const [start, end] = config.prizeRange;
     return items.filter(item => item.id >= start && item.id <= end);
-  };
+  }, [selectedTier, items]);
 
   // Плавное переключение уровня
   const handleTierChange = (newTier) => {
@@ -276,7 +276,7 @@ const SimpleWheel = () => {
         setCurrentFilteredItems(filtered);
       });
     }
-  }, [items, selectedTier]);
+  }, [items, selectedTier, getFilteredItems]);
 
   useEffect(() => {
     if (!loading && currentFilteredItems.length) {
