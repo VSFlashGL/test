@@ -1,6 +1,67 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Lottie from 'lottie-react';
 
+// Импортируем все анимации
+import anim01 from '../animations/01_emoji.json';
+import anim02 from '../animations/02_emoji.json';
+import anim03 from '../animations/03_emoji.json';
+import anim04 from '../animations/04_emoji.json';
+import anim05 from '../animations/05_emoji.json';
+import anim06 from '../animations/06_emoji.json';
+import anim07 from '../animations/07_emoji.json';
+import anim08 from '../animations/08_emoji.json';
+import anim09 from '../animations/09_emoji.json';
+import anim10 from '../animations/10_emoji.json';
+import anim11 from '../animations/11_emoji.json';
+import anim12 from '../animations/12_emoji.json';
+import anim13 from '../animations/13_emoji.json';
+import anim14 from '../animations/14_emoji.json';
+import anim15 from '../animations/15_emoji.json';
+import anim16 from '../animations/16_emoji.json';
+import anim17 from '../animations/17_emoji.json';
+import anim18 from '../animations/18_emoji.json';
+import anim19 from '../animations/19_emoji.json';
+import anim20 from '../animations/20_emoji.json';
+import anim21 from '../animations/21_emoji.json';
+import anim22 from '../animations/22_emoji.json';
+import anim23 from '../animations/23_emoji.json';
+import anim24 from '../animations/24_emoji.json';
+import anim25 from '../animations/25_emoji.json';
+import anim26 from '../animations/26_emoji.json';
+import anim27 from '../animations/27_emoji.json';
+import anim28 from '../animations/28_emoji.json';
+import anim29 from '../animations/29_emoji.json';
+import anim30 from '../animations/30_emoji.json';
+import anim31 from '../animations/31_emoji.json';
+import anim32 from '../animations/32_emoji.json';
+import anim33 from '../animations/33_emoji.json';
+import anim34 from '../animations/34_emoji.json';
+import anim35 from '../animations/35_emoji.json';
+import anim36 from '../animations/36_emoji.json';
+import anim37 from '../animations/37_emoji.json';
+import anim38 from '../animations/38_emoji.json';
+import anim39 from '../animations/39_emoji.json';
+import anim40 from '../animations/40_emoji.json';
+import anim41 from '../animations/41_emoji.json';
+import anim42 from '../animations/42_emoji.json';
+import anim43 from '../animations/43_emoji.json';
+import anim44 from '../animations/44_emoji.json';
+import anim45 from '../animations/45_emoji.json';
+import anim46 from '../animations/46_emoji.json';
+import anim47 from '../animations/47_emoji.json';
+import anim48 from '../animations/48_emoji.json';
+import anim49 from '../animations/49_emoji.json';
+import anim50 from '../animations/50_emoji.json';
+import anim51 from '../animations/51_emoji.json';
+
+const ANIMATIONS = [
+  anim01, anim02, anim03, anim04, anim05, anim06, anim07, anim08, anim09, anim10,
+  anim11, anim12, anim13, anim14, anim15, anim16, anim17, anim18, anim19, anim20,
+  anim21, anim22, anim23, anim24, anim25, anim26, anim27, anim28, anim29, anim30,
+  anim31, anim32, anim33, anim34, anim35, anim36, anim37, anim38, anim39, anim40,
+  anim41, anim42, anim43, anim44, anim45, anim46, anim47, anim48, anim49, anim50, anim51
+];
+
 const ITEM_WIDTH = 160;
 const TRACK_COPIES = 3; // три копии набора призов, чтобы не было видимых швов
 
@@ -157,47 +218,23 @@ const SimpleWheel = () => {
   }, []);
 
   useEffect(() => {
-    const loadAnimations = async () => {
-      const loadedItems = [];
+    // Создаём массив призов с импортированными анимациями
+    const loadedItems = ANIMATIONS.map((animationData, index) => ({
+      id: index + 1,
+      data: animationData,
+      animation: animationData,
+      name: PRIZE_NAMES[index] || `Prize #${index + 1}`,
+      emoji: '🎁'
+    }));
 
-      for (let i = 1; i <= 51; i++) {
-        const paddedNum = String(i).padStart(2, '0');
-        try {
-          const response = await fetch(`/animations/${paddedNum}_emoji.json`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch');
-          }
-          const data = await response.json();
-          loadedItems.push({ 
-            id: i, 
-            data,
-            animation: data, // Добавляем animation для использования в модальном окне
-            name: PRIZE_NAMES[i - 1] || `Prize #${i}`,
-            emoji: '🎁'
-          });
-        } catch (error) {
-          console.warn(`Fallback for animation ${i}`, error);
-          loadedItems.push({ 
-            id: i, 
-            data: null,
-            animation: null, 
-            emoji: '🎁', 
-            name: PRIZE_NAMES[i - 1] || `Prize #${i}`
-          });
-        }
-      }
+    // Перемешиваем призы в случайном порядке (Fisher-Yates shuffle)
+    for (let i = loadedItems.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [loadedItems[i], loadedItems[j]] = [loadedItems[j], loadedItems[i]];
+    }
 
-      // Перемешиваем призы в случайном порядке (Fisher-Yates shuffle)
-      for (let i = loadedItems.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [loadedItems[i], loadedItems[j]] = [loadedItems[j], loadedItems[i]];
-      }
-
-      setItems(loadedItems);
-      setLoading(false);
-    };
-
-    loadAnimations();
+    setItems(loadedItems);
+    setLoading(false);
   }, []);
 
   useEffect(() => () => {
