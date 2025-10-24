@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр Анимации</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        #animation {
+            width: 400px;
+            height: 400px;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        label {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            border: none;
+            width: 100px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        button {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        button.active {
+            background: linear-gradient(to right, #4ade80, #3b82f6);
+        }
+
+        .status {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Просмотр Анимаций Lottie</h1>
+    
+    <div class="container">
+        <div id="animation"></div>
+        <div class="status" id="status">Загрузка...</div>
+    </div>
+
+    <div class="controls">
+        <label for="animNumber">Выберите анимацию (1-51):</label>
+        <input type="number" id="animNumber" min="1" max="51" value="30">
+        <button onclick="loadSelectedAnimation()" style="background: linear-gradient(to right, #4ade80, #3b82f6); padding: 10px 30px;">
+            Загрузить
+        </button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <script>
+        let animation = null;
+        let currentAnim = 30;
+
+        // Создаем сетку кнопок
+        const grid = document.getElementById('grid');
+        for (let i = 1; i <= 51; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.onclick = () => loadAnimation(i);
+            btn.id = `btn-${i}`;
+            grid.appendChild(btn);
+        }
+
+        function updateActiveButton(num) {
+            // Убираем активный класс со всех кнопок
+            document.querySelectorAll('.grid button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Добавляем активный класс к текущей кнопке
+            const activeBtn = document.getElementById(`btn-${num}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            currentAnim = num;
+            document.getElementById('animNumber').value = num;
+        }
+
+        function loadAnimation(num) {
+            const status = document.getElementById('status');
+            status.textContent = 'Загрузка...';
+            status.className = 'status';
+            
+            updateActiveButton(num);
+
+            // Уничтожаем предыдущую анимацию
+            if (animation) {
+                animation.destroy();
+            }
+
+            const paddedNum = String(num).padStart(2, '0');
+            const animPath = `/animations/${paddedNum}_emoji.json`;
+
+            try {
+                animation = lottie.loadAnimation({
+                    container: document.getElementById('animation'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: animPath
+                });
+
+                animation.addEventListener('data_ready', () => {
+                    status.textContent = `✅ Анимация #${num} загружена успешно!`;
+                    status.className = 'status success';
+                });
+
+                animation.addEventListener('data_failed', () => {
+                    status.textContent = `❌ Ошибка загрузки анимации #${num}`;
+                    status.className = 'status error';
+                });
+            } catch (error) {
+                status.textContent = `❌ Ошибка: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        function loadSelectedAnimation() {
+            const num = parseInt(document.getElementById('animNumber').value);
+            if (num >= 1 && num <= 51) {
+                loadAnimation(num);
+            } else {
+                alert('Пожалуйста, введите число от 1 до 51');
+            }
+        }
+
+        // Загрузка начальной анимации
+        window.onload = () => {
+            loadAnimation(30);
+        };
+
+        // Поддержка клавиш стрелок
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentAnim > 1) {
+                loadAnimation(currentAnim - 1);
+            } else if (e.key === 'ArrowRight' && currentAnim < 51) {
+                loadAnimation(currentAnim + 1);
+            }
+        });
+    </script>
+</body>
+</html>

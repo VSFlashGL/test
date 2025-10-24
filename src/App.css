@@ -1,0 +1,8 @@
+.App {
+  text-align: center;
+}
+
+.canvas-item {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
