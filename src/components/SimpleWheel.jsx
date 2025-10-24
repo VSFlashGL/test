@@ -63,6 +63,60 @@ const SimpleWheel = () => {
   // Балансы пользователя (заглушки)
   const [gemsBalance, setGemsBalance] = useState(0);
   const [starsBalance, setStarsBalance] = useState(0);
+  
+  // Компонент нижней навигации
+  const BottomNav = () => (
+    <div style={{
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      background: 'rgba(15, 12, 41, 0.95)',
+      backdropFilter: 'blur(12px)',
+      borderTop: '1px solid rgba(139, 92, 246, 0.2)',
+      display: 'flex',
+      justifyContent: 'space-around',
+      padding: '0.75rem 1rem',
+      paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+      zIndex: 1000
+    }}>
+      <button
+        onClick={() => setActiveScreen('home')}
+        style={{
+          flex: 1,
+          maxWidth: 200,
+          padding: '0.6rem 1rem',
+          background: activeScreen === 'home' ? 'linear-gradient(135deg, #8b5cf6, #3b82f6)' : 'rgba(139, 92, 246, 0.15)',
+          border: activeScreen === 'home' ? '1px solid rgba(139, 92, 246, 0.5)' : '1px solid rgba(139, 92, 246, 0.25)',
+          borderRadius: 12,
+          color: '#fff',
+          fontWeight: 600,
+          cursor: 'pointer',
+          transition: 'all 0.2s'
+        }}
+      >
+        🏠 Главная
+      </button>
+      <button
+        onClick={() => setActiveScreen('roulette')}
+        style={{
+          flex: 1,
+          maxWidth: 200,
+          padding: '0.6rem 1rem',
+          background: activeScreen === 'roulette' ? 'linear-gradient(135deg, #8b5cf6, #3b82f6)' : 'rgba(139, 92, 246, 0.15)',
+          border: activeScreen === 'roulette' ? '1px solid rgba(139, 92, 246, 0.5)' : '1px solid rgba(139, 92, 246, 0.25)',
+          borderRadius: 12,
+          color: '#fff',
+          fontWeight: 600,
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          marginLeft: '0.75rem'
+        }}
+      >
+        🎡 Колесо фортуны
+      </button>
+    </div>
+  );
 
   const offsetRef = useRef(0);
   const velocityRef = useRef(0);
@@ -651,6 +705,9 @@ const SimpleWheel = () => {
 
         {/* Низ страницы (немного отступа) */}
         <div style={{ height: 'clamp(1rem, 4vw, 2rem)' }} />
+        
+        {/* Нижняя навигация */}
+        <BottomNav />
       </div>
     );
   }
@@ -697,6 +754,9 @@ const SimpleWheel = () => {
             <div style={{ fontSize: 'clamp(0.95rem, 2.4vw, 1.1rem)', color: 'rgba(255,255,255,0.8)' }}>{hint}</div>
           </div>
         </div>
+        
+        {/* Нижняя навигация */}
+        <BottomNav />
       </div>
     );
   }
@@ -1593,6 +1653,9 @@ const SimpleWheel = () => {
           }
         }
       `}</style>
+      
+      {/* Нижняя навигация */}
+      <BottomNav />
     </div>
   );
 };
