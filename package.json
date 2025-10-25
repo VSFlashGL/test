@@ -2,7 +2,7 @@
   "name": "web3-wheel-project",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://vsflashgl.github.io/test",
+  "homepage": "https://nexuswal.pro",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -14,8 +14,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -b gh-pages",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -39,7 +37,6 @@
   "devDependencies": {
     "tailwindcss": "^3.4.0",
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.32",
-    "gh-pages": "^6.3.0"
+    "postcss": "^8.4.32"
   }
 }
